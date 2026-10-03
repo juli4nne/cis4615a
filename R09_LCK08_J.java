@@ -3,22 +3,21 @@ public final class Client {
 
   public void doSomething(File file) {
     InputStream in = null;
+    lock.lock();
     try {
       in = new FileInputStream(file);
-      lock.lock();
-
       // Perform operations on the open file
-
-      lock.unlock();
-    } catch (FileNotFoundException x) {
-      // Handle exception
+    } catch (FileNotFoundException fnf) {
+      // Forward to handler
     } finally {
+      lock.unlock();
+
       if (in != null) {
         try {
           in.close();
-        } catch (IOException x) {
-          // Handle exception
-        }  
+        } catch (IOException e) {
+          // Forward to handler
+        }
       }
     }
   }
